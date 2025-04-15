@@ -36,15 +36,15 @@ def detect_language(text: str) -> str:
 def translate_text(req: TranslateRequest):
     try:
         # Auto-detect if from_lang is missing or explicitly set to "auto"
+        output={}
         source_lang = req.from_lang
         if not source_lang or source_lang.lower() == "auto":
             source_lang = detect_language(req.text)
+            output["detected_source_lang"] = source_lang
 
         result = argostranslate.translate.translate(req.text, source_lang, req.to_lang)
-        return {
-            "translated_text": result,
-            "detected_source_lang": source_lang
-        }
+        output["translated_text"] = result
+        return output
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Translation failed: {str(e)}")
 

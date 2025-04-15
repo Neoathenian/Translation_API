@@ -64,6 +64,7 @@ print(response.text)
 ---
 
 ## 🛠 Notes
+- You can omit the from_lang as it we have automated language detection if it is not included.
 - Ensure your firewall allows local connections on port `8090`
 - The translation quality depends on the downloaded models
 - You can add or remove language pairs anytime by updating `language_pairs.txt` and re-running step 3
