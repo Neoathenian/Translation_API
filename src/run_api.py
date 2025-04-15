@@ -4,9 +4,17 @@ from pydantic import BaseModel
 from typing import Optional
 import uvicorn
 
-# Use the env var or fallback to current directory
-os.environ["XDG_DATA_HOME"] = os.getcwd()
-os.environ.setdefault("ARGOS_TRANSLATE_PACKAGE_PATH", os.path.join(os.getcwd(), "argos-translate"))
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir)  # Go up one level
+
+# Set Argos Translate to use the project root for its data
+os.environ["XDG_DATA_HOME"] = project_root
+os.environ["ARGOS_TRANSLATE_PACKAGE_PATH"] = os.path.join(project_root, "argos-translate")
+
+# # Use the env var or fallback to current directory
+# os.environ["XDG_DATA_HOME"] = os.getcwd()
+# os.environ.setdefault("ARGOS_TRANSLATE_PACKAGE_PATH", os.path.join(os.getcwd(), "argos-translate"))
 
 import argostranslate.translate
 
