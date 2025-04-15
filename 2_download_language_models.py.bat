@@ -4,7 +4,7 @@ setlocal
 :: Paths
 set "EXTRACT_DIR=%~dp0PythonPortable"
 set "PYTHON=%EXTRACT_DIR%\python.exe"
-set "SCRIPT_NAME=src\install_language_models.py"
+set "SCRIPT_NAME=src\download_language_models.py"
 
 :: Set custom package path (for portability)
 set "ARGOS_TRANSLATE_PACKAGE_PATH=%~dp0PythonPortable\data\argos-packages"

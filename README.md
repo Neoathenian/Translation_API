@@ -17,7 +17,7 @@ Follow these steps to get your translation API up and running:
 ### 1️⃣ Install Python Environment & Dependencies
 Run:
 ```
-Installation.bat
+installation.bat
 ```
 This will create a `PythonPortable` folder containing a standalone Python environment with all required libraries.
 
@@ -29,7 +29,7 @@ Open `language_pairs.txt` and define the translation pairs you need.
 ### 3️⃣ Download Translation Models
 Run:
 ```
-2_install_language_models.bat
+2_download_language_models.bat
 ```
 This downloads the models required for your specified language pairs.
 
@@ -74,8 +74,8 @@ print(response.text)
 
 | File | Purpose |
 |------|---------|
-| `Installation.bat` | Sets up the portable Python environment |
+| `installation.bat` | Sets up the portable Python environment |
 | `language_pairs.txt` | List of source-target language codes |
-| `2_install_language_models.bat` | Downloads the required translation models |
+| `2_download_language_models.bat` | Downloads the required translation models |
 | `3_run_api.bat` | Starts the local API server |
 | `4_call_api.bat` | Sample script to test the API |
