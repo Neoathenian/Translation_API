@@ -3,38 +3,51 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 import uvicorn
+import langid
 
+import argostranslate.translate
+# Configure langid to only recognize a specific set of languages
+#langid.set_languages(['en', 'ro'])  # Add more as needed
 
+# Set Argos Translate environment paths
 script_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.dirname(script_dir)  # Go up one level
-
-# Set Argos Translate to use the project root for its data
+project_root = os.path.dirname(script_dir)
 os.environ["XDG_DATA_HOME"] = project_root
 os.environ["ARGOS_TRANSLATE_PACKAGE_PATH"] = os.path.join(project_root, "argos-translate")
 
-# # Use the env var or fallback to current directory
-# os.environ["XDG_DATA_HOME"] = os.getcwd()
-# os.environ.setdefault("ARGOS_TRANSLATE_PACKAGE_PATH", os.path.join(os.getcwd(), "argos-translate"))
-
-import argostranslate.translate
-
-# ✅ NO need to call `load_installed_packages()` in older versions
 
 app = FastAPI()
 
 class TranslateRequest(BaseModel):
     text: str
     to_lang: str
-    from_lang: Optional[str] = "en"
+    from_lang: Optional[str] = None  # Allow None or "auto"
+
+
+def detect_language(text: str) -> str:
+    try:
+        lang_code, _ = langid.classify(text)
+        return lang_code
+    except Exception:
+        return "ro"  # Fallback
 
 
 @app.post("/translate")
 def translate_text(req: TranslateRequest):
     try:
-        result = argostranslate.translate.translate(req.text, req.from_lang, req.to_lang)
-        return {"translated_text": result}
+        # Auto-detect if from_lang is missing or explicitly set to "auto"
+        source_lang = req.from_lang
+        if not source_lang or source_lang.lower() == "auto":
+            source_lang = detect_language(req.text)
+
+        result = argostranslate.translate.translate(req.text, source_lang, req.to_lang)
+        return {
+            "translated_text": result,
+            "detected_source_lang": source_lang
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Translation failed: {str(e)}")
+
 
 
 if __name__ == "__main__":
